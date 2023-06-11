@@ -27,8 +27,10 @@ project(Zixi
 
 include(cmake/utils.cmake)
 find_package(fmt REQUIRED)
+find_path(TINYDIR_INCLUDE_DIRS "tinydir.h")
 
 set(ZIXI_ROOT ${CMAKE_CURRENT_LIST_DIR})
+set(ZIXI_DIR ${CMAKE_CURRENT_LIST_DIR})
 set(ZIXI_INCLUDE_DIR include/)
 
 configure_file(${CMAKE_CURRENT_LIST_DIR}/cmake/config_zixi_app.h.cmake ${CMAKE_BINARY_DIR}/config_zixi_app.h)
@@ -39,38 +41,11 @@ enable_testing()
 
 include(cmake/all.cmake)
 
+add_subdirectory(libs/zest)
 add_subdirectory(src)
 
 if (NOT ${ZIXI_LIBRARY_ONLY})
 add_subdirectory(app)
 add_subdirectory(tests)
 endif()
-
-# Make the CMake bits that ensure find_package does the right thing
-install(EXPORT zixi-targets
-    FILE zixi-targets.cmake
-    NAMESPACE zixi::
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/zixi
-)
-
-include(CMakePackageConfigHelpers)
-
-configure_package_config_file(
-    ${ZIXI_ROOT}/cmake/zixi-config.cmake.in
-    ${CMAKE_BINARY_DIR}/cmake/zixi-config.cmake
-    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/zixi
-)
-
-write_basic_package_version_file(
-    ${CMAKE_BINARY_DIR}/cmake/zixi-config-version.cmake
-    VERSION 1.0
-    COMPATIBILITY AnyNewerVersion
-)
-
-install(
-    FILES
-        ${CMAKE_BINARY_DIR}/cmake/zixi-config.cmake
-        ${CMAKE_BINARY_DIR}/cmake/zixi-config-version.cmake
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/zixi
-)
 
