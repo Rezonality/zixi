@@ -10,6 +10,10 @@
 #include <zest/logger/logger.h>
 #include <zest/file/file.h>
 
+#include <zixi/zixi.h>
+
+using namespace Zixi;
+
 int main(int argc, char* argv[])
 {
     std::string input;
@@ -28,6 +32,13 @@ int main(int argc, char* argv[])
             if (line == "quit") {
                 break;
             }
+
+            auto result = zixi_tokenize(line);
+            for (auto& v : result.tokens)
+            {
+                std::cout << v << std::endl;
+            }
+
         }
     }
 }

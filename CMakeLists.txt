@@ -35,8 +35,6 @@ set(ZIXI_INCLUDE_DIR include/)
 
 configure_file(${CMAKE_CURRENT_LIST_DIR}/cmake/config_zixi_app.h.cmake ${CMAKE_BINARY_DIR}/config_zixi_app.h)
 
-include(GNUInstallDirs)
-
 enable_testing()
 
 include(cmake/all.cmake)

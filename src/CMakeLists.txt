@@ -22,30 +22,20 @@ add_library(Zixi::Zixi ALIAS Zixi)
 
 target_include_directories(Zixi
 PRIVATE
-    ${ZIXI_DIR}/libs
-    ${ZIXI_DIR}/libs/zest/include
+    ${CMAKE_BINARY_DIR}
 PUBLIC
-    ${ZIXI_DIR}/include)
+    $<BUILD_INTERFACE:${ZIXI_ROOT}/libs>
+    $<BUILD_INTERFACE:${ZIXI_ROOT}/include>
+)
 
 target_compile_definitions(Zixi
     PUBLIC
     NO_LIBSNDFILE
     _SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING)
 
-if(WIN32)
-target_compile_definitions(Zixi
-    PUBLIC
-    LIBREMIDI_WINMM
-    LIBREMIDI_JACK
-)
-endif()
-
 target_link_libraries(Zixi
-PRIVATE
-    ${TINYDIR_INCLUDE_DIRS}
-    fmt::fmt
-    Zest::Zest
 PUBLIC
+    Zest::Zest
 )
 
 if("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
@@ -55,14 +45,6 @@ endif()
 target_precompile_headers(Zixi
   PRIVATE
     ${ZIXI_ROOT}/include/zixi/pch.h
-)
-
-target_include_directories(Zixi
-PRIVATE
-    ${CMAKE_BINARY_DIR}
-PUBLIC
-    $<BUILD_INTERFACE:${ZIXI_ROOT}/libs>
-    $<BUILD_INTERFACE:${ZIXI_ROOT}/include>
 )
 
 source_group ("zixi" FILES ${ZIXI_SOURCE})

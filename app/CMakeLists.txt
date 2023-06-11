@@ -24,11 +24,6 @@ add_executable (${APP_NAME}
     ${ZIXI_APP_SOURCE}
     )
 
-# Specify that it is a console application
-if(WIN32)
-    target_link_libraries(${PROJECT_NAME} PRIVATE "-mconsole")
-endif()
-
 target_include_directories(${APP_NAME}
     PRIVATE
     ${ZIXI_ROOT}/libs/zest/include

@@ -31,8 +31,6 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${M3RDPARTY_DIR}
     ${CMAKE_BINARY_DIR}
     include
-    ${ZIXI_DIR}/libs
-    ${ZIXI_DIR}/libs/zest/include
     )
 
 target_link_libraries(${PROJECT_NAME}
