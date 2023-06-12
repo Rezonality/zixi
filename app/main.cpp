@@ -26,13 +26,14 @@ int main(int argc, char* argv[])
         std::string line;
         while (std::getline(std::cin, line)) {
 
-            std::cout << "You entered: " << line << std::endl;
+            std::cout << "INPUT:" << line << std::endl;
 
             // Exit the loop if a specific condition is met
             if (line == "quit") {
                 break;
             }
 
+            std::cout << "OUTPUT : " << std::endl;
             auto result = zixi_tokenize(line);
             for (auto& v : result.tokens)
             {

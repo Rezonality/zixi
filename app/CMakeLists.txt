@@ -14,8 +14,6 @@ list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_CURRENT_LIST_DIR}/cmake)
 set(ZIXI_APP_SOURCE
     ${APP_ROOT}/main.cpp
     ${APP_ROOT}/CMakeLists.txt
-    ${ZIXI_ROOT}/prebuild.bat
-    ${ZIXI_ROOT}/prebuild.sh
     )
 
 set(RESOURCE_FOLDER ${CMAKE_CURRENT_LIST_DIR}/res)

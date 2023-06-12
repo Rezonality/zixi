@@ -7,8 +7,10 @@ find_package(fmt CONFIG REQUIRED)
 
 set(ZIXI_SOURCE
     ${ZIXI_ROOT}/src/zixi.cpp
+    ${ZIXI_ROOT}/src/scanner.cpp
     ${ZIXI_ROOT}/src/CMakeLists.txt
     ${ZIXI_ROOT}/include/zixi/zixi.h
+    ${ZIXI_ROOT}/include/zixi/scanner.h
 )
 
 set(ZIXI_SOURCE
