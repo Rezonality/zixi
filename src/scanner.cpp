@@ -127,7 +127,7 @@ TokenType identifierType(Scanner& scanner)
                 {
                     case '>':
                         scanner.current++;
-                        return TOKEN_ACTION_FORWARDS;
+                        return TOKEN_ACTION_GREATER_GREATER;
                     case 's':
                         return checkKeyword(scanner, 2, 4, "hift", TOKEN_ACTION_GREATER_SHIFT);
                 }
@@ -235,7 +235,16 @@ Token string(Scanner& scanner, const char delim, TokenType type)
 
     // The closing quote.
     advance(scanner);
-    return makeToken(scanner, type);
+
+    Token tok = makeToken(scanner, type);
+
+    // Remove the quotes
+    if (tok.length >= 2)
+    {
+        tok.start++;
+        tok.length -= 2;
+    }
+    return tok;
 }
 
 } //namespace
@@ -407,8 +416,8 @@ const char* zixi_token_to_string(TokenType& tokenType)
             return "TOKEN_CONCRETE_PATTERN";
         case TOKEN_ACTION_GREATER_SHIFT:
             return "TOKEN_ACTION_GREATER_SHIFT";
-        case TOKEN_ACTION_FORWARDS:
-            return "TOKEN_ACTION_FORWARDS";
+        case TOKEN_ACTION_GREATER_GREATER:
+            return "TOKEN_ACTION_GREATER_GREATER";
         case TOKEN_PRODUCES:
             return "TOKEN_PRODUCES";
         case TOKEN_COLON:
