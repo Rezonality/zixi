@@ -13,7 +13,7 @@ if [ "$(uname)" == "Darwin" ]; then
 fi
 
 cd vcpkg
-./vcpkg install date tomlplusplus cppcodec imgui concurrentqueue clipp glm tinydir fmt catch2 --triplet ${triplet[0]} --recurse
+./vcpkg install tomlplusplus cppcodec imgui concurrentqueue clipp glm tinydir fmt catch2 --triplet ${triplet[0]} --recurse
 if [ "$(uname)" != "Darwin" ]; then
 ./vcpkg install glib --triplet ${triplet[0]} --recurse
 fi

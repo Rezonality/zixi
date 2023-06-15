@@ -52,7 +52,7 @@ void update_state(IxiState& state, IxiState newState)
                     else
                     {
                         // Remove all of the same type?
-                        std::remove_if(pattern.effectChain.begin(), pattern.effectChain.end(), [&](auto& val) {
+                        std::erase_if(pattern.effectChain, [&](auto& val) {
                             return (val.name == effect.name);
                         });
                     }
