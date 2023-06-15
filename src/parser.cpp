@@ -1,5 +1,5 @@
-#include <string>
 #include <cassert>
+#include <string>
 
 #include <fmt/format.h>
 
@@ -77,7 +77,17 @@ void parse_declaration(Parser& p)
             if (p.current.type == TOKEN_IDENTIFIER)
             {
                 p.state.patterns[ident].name = ident;
-                p.state.patterns[ident].pipes.push_back(token_string(p.current));
+                p.state.patterns[ident].effectChain.push_back(Effect{token_string(p.current), true});
+                consume(p);
+            }
+        }
+        else if (p.current.type == TOKEN_ACTION_LESS_LESS)
+        {
+            consume(p);
+            if (p.current.type == TOKEN_IDENTIFIER)
+            {
+                p.state.patterns[ident].name = ident;
+                p.state.patterns[ident].effectChain.push_back(Effect{token_string(p.current), false});
                 consume(p);
             }
         }
@@ -138,14 +148,22 @@ std::string zixi_pattern_to_string(const Pattern& pattern)
     str << "Name:" << pattern.name << ", Type:" << zixi_pattern_type_to_string(pattern.type) << ", Synth:" << pattern.synth << ", Values:'" << pattern.values << "'";
 
     bool effects = false;
-    for (auto& pipe : pattern.pipes)
+    for (auto& effect : pattern.effectChain)
     {
         if (!effects)
         {
             effects = true;
             str << ", Effects: ";
         }
-        str << " >> " << pipe;
+
+        if (effect.add)
+        {
+            str << " >> " << effect.name;
+        }
+        else
+        {
+            str << " << " << effect.name;
+        }
     }
     return str.str();
 }

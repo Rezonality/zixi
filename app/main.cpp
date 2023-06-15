@@ -22,6 +22,7 @@ void out(const std::string& val = std::string())
 
 void update_state(IxiState& state, IxiState newState)
 {
+    // Add newly declared patterns
     for (auto& [name, pattern] : newState.patterns)
     {
         if (state.patterns.find(name) == state.patterns.end())
@@ -32,9 +33,31 @@ void update_state(IxiState& state, IxiState newState)
 
     for (auto& [name, pattern] : state.patterns)
     {
+        // Already have this pattern?
         if (newState.patterns.find(name) != newState.patterns.end())
         {
-            pattern.pipes.insert(pattern.pipes.end(), newState.patterns[name].pipes.begin(), newState.patterns[name].pipes.end());
+            for (auto& effect : pattern.effectChain)
+            {
+                if (effect.name.empty())
+                {
+                    pattern.effectChain.clear();
+                }
+                else
+                {
+                    // Add or remove on the effect chain
+                    if (effect.add)
+                    {
+                        pattern.effectChain.push_back(effect);
+                    }
+                    else
+                    {
+                        // Remove all of the same type?
+                        std::remove_if(pattern.effectChain.begin(), pattern.effectChain.end(), [&](auto& val) {
+                            return (val.name == effect.name);
+                        });
+                    }
+                }
+            }
         }
     }
 }

@@ -1,5 +1,8 @@
 #include <cstdio>
 #include <cstring>
+#include <string>
+#include <vector>
+#include <unordered_map>
 
 #include <zixi/scanner.h>
 
@@ -105,82 +108,27 @@ void skipWhitespace(Scanner& scanner)
     }
 }
 
-TokenType checkKeyword(Scanner& scanner, int start, int length, const char* rest, TokenType type)
-{
-    if (scanner.current - scanner.start == start + length && memcmp(scanner.start + start, rest, length) == 0)
-    {
-        return type;
-    }
+std::unordered_map<std::string, TokenType> identifiers {
+    {"tuning", TOKEN_TUNING},
+    {"doze", TOKEN_DOZE},
+    {"perk", TOKEN_PERK},
+    {"swap", TOKEN_SWAP},
+    {"shake", TOKEN_SHAKE},
+    {"future", TOKEN_FUTURE},
+    {"tempo", TOKEN_TEMPO},
+    {"shift", TOKEN_ACTION_SHIFT},
+    {">>", TOKEN_ACTION_GREATER_GREATER},
+    {"<<", TOKEN_ACTION_LESS_LESS},
 
-    return TOKEN_IDENTIFIER;
-}
+};
 
 TokenType identifierType(Scanner& scanner)
 {
-    //> keywords
-    switch (scanner.start[0])
+    std::string str(scanner.start, scanner.current - scanner.start);
+    auto itr = identifiers.find(str);
+    if (itr != identifiers.end())
     {
-        case '>':
-            if ((scanner.current - scanner.start) >= 1)
-            {
-                switch (scanner.start[1])
-                {
-                    case '>':
-                        scanner.current++;
-                        return TOKEN_ACTION_GREATER_GREATER;
-                    case 's':
-                        return checkKeyword(scanner, 2, 4, "hift", TOKEN_ACTION_GREATER_SHIFT);
-                }
-            }
-            break;
-        case 'a':
-            return checkKeyword(scanner, 1, 2, "nd", TOKEN_AND);
-        case 'c':
-            return checkKeyword(scanner, 1, 4, "lass", TOKEN_CLASS);
-        case 'e':
-            return checkKeyword(scanner, 1, 3, "lse", TOKEN_ELSE);
-        case 'f':
-            if (scanner.current - scanner.start > 1)
-            {
-                switch (scanner.start[1])
-                {
-                    case 'a':
-                        return checkKeyword(scanner, 2, 3, "lse", TOKEN_FALSE);
-                    case 'o':
-                        return checkKeyword(scanner, 2, 1, "r", TOKEN_FOR);
-                    case 'u':
-                        return checkKeyword(scanner, 2, 1, "n", TOKEN_FUN);
-                }
-            }
-            break;
-        case 'i':
-            return checkKeyword(scanner, 1, 1, "f", TOKEN_IF);
-        case 'n':
-            return checkKeyword(scanner, 1, 2, "il", TOKEN_NIL);
-        case 'o':
-            return checkKeyword(scanner, 1, 1, "r", TOKEN_OR);
-        case 'p':
-            return checkKeyword(scanner, 1, 4, "rint", TOKEN_PRINT);
-        case 'r':
-            return checkKeyword(scanner, 1, 5, "eturn", TOKEN_RETURN);
-        case 's':
-            return checkKeyword(scanner, 1, 4, "uper", TOKEN_SUPER);
-        case 't':
-            if (scanner.current - scanner.start > 1)
-            {
-                switch (scanner.start[1])
-                {
-                    case 'h':
-                        return checkKeyword(scanner, 2, 2, "is", TOKEN_THIS);
-                    case 'r':
-                        return checkKeyword(scanner, 2, 2, "ue", TOKEN_TRUE);
-                }
-            }
-            break;
-        case 'v':
-            return checkKeyword(scanner, 1, 2, "ar", TOKEN_VAR);
-        case 'w':
-            return checkKeyword(scanner, 1, 4, "hile", TOKEN_WHILE);
+        return itr->second;
     }
 
     return TOKEN_IDENTIFIER;
@@ -267,7 +215,7 @@ Token zixi_scanner_next_token(Scanner& scanner)
     }
 
     char c = advance(scanner);
-    if (isAlpha(c) || c == '>')
+    if (isAlpha(c))
     {
         return identifier(scanner);
     }
@@ -372,38 +320,6 @@ const char* zixi_token_to_string(TokenType& tokenType)
             return "TOKEN_STRING";
         case TOKEN_NUMBER:
             return "TOKEN_NUMBER";
-        case TOKEN_AND:
-            return "TOKEN_AND";
-        case TOKEN_CLASS:
-            return "TOKEN_CLASS";
-        case TOKEN_ELSE:
-            return "TOKEN_ELSE";
-        case TOKEN_FALSE:
-            return "TOKEN_FALSE";
-        case TOKEN_FOR:
-            return "TOKEN_FOR";
-        case TOKEN_FUN:
-            return "TOKEN_FUN";
-        case TOKEN_IF:
-            return "TOKEN_IF";
-        case TOKEN_NIL:
-            return "TOKEN_NIL";
-        case TOKEN_OR:
-            return "TOKEN_OR";
-        case TOKEN_PRINT:
-            return "TOKEN_PRINT";
-        case TOKEN_RETURN:
-            return "TOKEN_RETURN";
-        case TOKEN_SUPER:
-            return "TOKEN_SUPER";
-        case TOKEN_THIS:
-            return "TOKEN_THIS";
-        case TOKEN_TRUE:
-            return "TOKEN_TRUE";
-        case TOKEN_VAR:
-            return "TOKEN_VAR";
-        case TOKEN_WHILE:
-            return "TOKEN_WHILE";
         case TOKEN_ERROR:
             return "TOKEN_ERROR";
         case TOKEN_EOF:
@@ -414,10 +330,12 @@ const char* zixi_token_to_string(TokenType& tokenType)
             return "TOKEN_MELODIC_PATTERN";
         case TOKEN_CONCRETE_PATTERN:
             return "TOKEN_CONCRETE_PATTERN";
-        case TOKEN_ACTION_GREATER_SHIFT:
-            return "TOKEN_ACTION_GREATER_SHIFT";
+        case TOKEN_ACTION_SHIFT:
+            return "TOKEN_ACTION_SHIFT";
         case TOKEN_ACTION_GREATER_GREATER:
             return "TOKEN_ACTION_GREATER_GREATER";
+        case TOKEN_ACTION_LESS_LESS:
+            return "TOKEN_ACTION_LESS_LESS";
         case TOKEN_PRODUCES:
             return "TOKEN_PRODUCES";
         case TOKEN_COLON:
@@ -426,6 +344,20 @@ const char* zixi_token_to_string(TokenType& tokenType)
             return "TOKEN_HAT";
         case TOKEN_DOLLAR:
             return "TOKEN_DOLLAR";
+        case TOKEN_TUNING:
+            return "TUNING";
+        case TOKEN_TEMPO:
+            return "TEMPO";
+        case TOKEN_FUTURE:
+            return "FUTURE";
+        case TOKEN_SWAP:
+            return "SWAP";
+        case TOKEN_SHAKE:
+            return "SHAKE";
+        case TOKEN_DOZE:
+            return "DOZE";
+        case TOKEN_PERK:
+            return "PERK";
         default:
             return "!UNKNOWN?";
     }
